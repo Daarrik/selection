@@ -122,7 +122,7 @@ def main():
       for run in range(runs):
         print(f'run: {run}')
         print(f'k: {index}')
-        test_list = np.random.randint(low=0, high=n, size=n)
+        test_list = [x for x in range(n)]
 
         print('Algorithm 1: Merge Sort')
         # Avoid sorting row by creating copy
