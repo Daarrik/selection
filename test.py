@@ -1,10 +1,29 @@
 from math import floor
 import numpy as np
-
+def partition(arr, low, high):
+  pivot = arr[high]
+  i = (low - 1)
+  for j in range(low, high):
+    if arr[j] <= pivot:
+      i += 1
+      arr[i], arr[j] = arr[j], arr[i]
+         
+  arr[i + 1], arr[high] = arr[high], arr[i + 1]
+  return (i + 1)
 def chunks(lst, n):
   for i in range(0, len(lst), n):
     yield lst[i:i + n]
 
+def select_kth_3(arr, low, high, k):
+  if low > high: return -1
+
+  pivot = partition(arr, low, high)
+  if pivot == k - 1:
+    return arr[pivot]
+  elif pivot > k - 1:
+    return select_kth_3(arr, low, pivot-1, k)
+  else:
+    return select_kth_3(arr, pivot+1, high, k)
 def select_kth_4(arr, k):
   # Split arr into separate lists of 5 elements
   split_arrs = list(chunks(arr, 5))
@@ -37,12 +56,12 @@ k.extend(floor(n*index) for index in kth)
 k.append(n)
 print(k)
 
-test_list = np.random.randint(low=0, high=n, size=n)
-print(test_list)
-print(sorted(test_list))
-for index in k:
-  print(f'index:{index}')
-  list_dupe = test_list.copy()
-  print(test_list)
-  print(list_dupe)
-  print(select_kth_4(list_dupe, index))
+test_list = [1,1,1,1,1,1,1,1,1]
+# print(test_list)
+# print(sorted(test_list))
+# for index in k:
+#   print(f'index:{index}')
+#   list_dupe = test_list.copy()
+#   print(test_list)
+#   print(list_dupe)
+print(select_kth_3(test_list, 0, len(test_list)-1, 8))
