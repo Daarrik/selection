@@ -1,67 +1,87 @@
 from math import floor
+from random import random
 import numpy as np
-def partition(arr, low, high):
-  pivot = arr[high]
-  i = (low - 1)
-  for j in range(low, high):
-    if arr[j] <= pivot:
+
+def merge(list, left, right):
+  i, j, k = 0, 0, 0
+  while i < len(left) and j < len(right):
+    if left[i] <= right[j]:
+      list[k] = left[i]
       i += 1
-      arr[i], arr[j] = arr[j], arr[i]
-         
-  arr[i + 1], arr[high] = arr[high], arr[i + 1]
-  return (i + 1)
-def chunks(lst, n):
-  for i in range(0, len(lst), n):
-    yield lst[i:i + n]
+    else:
+      list[k] = right[j]
+      j += 1
+    k += 1
+  
+  while i < len(left):
+    list[k] = left[i]
+    i += 1
+    k += 1
+  
+  while j < len(right):
+    list[k] = right[j]
+    j += 1
+    k += 1
 
-def select_kth_3(arr, low, high, k):
-  if low > high: return -1
+def select_kth_1(list):
+  length = len(list)
+  if length <= 1: return
 
-  pivot = partition(arr, low, high)
-  if pivot == k - 1:
-    return arr[pivot]
-  elif pivot > k - 1:
-    return select_kth_3(arr, low, pivot-1, k)
-  else:
-    return select_kth_3(arr, pivot+1, high, k)
-def select_kth_4(arr, k):
-  # Split arr into separate lists of 5 elements
-  split_arrs = list(chunks(arr, 5))
+  mid = length // 2
+  left = list[:mid]
+  right = list[mid:]
 
-  # Disgusting list comprehension
-    # First sorts all lists in splits_arrs,
-    # then appends middle index to medians
-  medians = [sorted(split_arr)[len(split_arr)//2] for split_arr in split_arrs]
+  select_kth_1(left)
+  select_kth_1(right)
+  merge(list, left, right)
 
-  if len(medians) <= 5:
-    pivot_value = sorted(medians)[len(medians)//2]
-  else:
-    pivot_value = select_kth_4(medians, len(medians)//2)
+# def mergeSort(arr):
+#     if len(arr) > 1:
+  
+#          # Finding the mid of the array
+#         mid = len(arr)//2
+  
+#         # Dividing the array elements
+#         L = arr[:mid]
+  
+#         # into 2 halves
+#         R = arr[mid:]
+  
+#         # Sorting the first half
+#         mergeSort(L)
+  
+#         # Sorting the second half
+#         mergeSort(R)
+  
+#         i = j = k = 0
+  
+#         # Copy data to temp arrays L[] and R[]
+#         while i < len(L) and j < len(R):
+#             if L[i] < R[j]:
+#                 arr[k] = L[i]
+#                 i += 1
+#             else:
+#                 arr[k] = R[j]
+#                 j += 1
+#             k += 1
+  
+#         # Checking if any element was left
+#         while i < len(L):
+#             arr[k] = L[i]
+#             i += 1
+#             k += 1
+  
+#         while j < len(R):
+#             arr[k] = R[j]
+#             j += 1
+#             k += 1
 
-  low = [j for j in arr if j < pivot_value]
-  high = [j for j in arr if j > pivot_value]
-
-  pivot = len(low)
-  if k - 1 < pivot:
-    return select_kth_4(low, k)
-  elif k - 1 > pivot:
-    return select_kth_4(high, k-pivot-1)
-  else:
-    return pivot_value
-
-n = 10
-kth = [1/4, 1/2, 3/4]
-k = [1]
-k.extend(floor(n*index) for index in kth)
-k.append(n)
-print(k)
-
-test_list = [1,1,1,1,1,1,1,1,1]
-# print(test_list)
-# print(sorted(test_list))
-# for index in k:
-#   print(f'index:{index}')
-#   list_dupe = test_list.copy()
-#   print(test_list)
-#   print(list_dupe)
-print(select_kth_3(test_list, 0, len(test_list)-1, 8))
+# test_list = np.random.randint(low=0, high=10, size=10)
+test_list = [floor(random()*10+1) for x in range(10)]
+# test_list = [6, 3, 4, 4, 1, 2, 2, 7]
+dupe_list = test_list.copy()
+print(dupe_list)
+print(test_list)
+select_kth_1(dupe_list)
+print(test_list)
+print(dupe_list)
