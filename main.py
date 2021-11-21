@@ -112,10 +112,9 @@ def select_kth_4(arr, k):
   if len(medians) <= 5:
     pivot_value = sorted(medians)[len(medians) // 2]
   else:
-    pivot_value = select_kth_4(len(medians) // 2)
+    pivot_value = select_kth_4(medians, len(medians) // 2)
 
   pivot = partition_4(arr, pivot_value)
-
   if k - 1 == pivot:
     return pivot_value
   elif k-1 < pivot:
@@ -124,13 +123,15 @@ def select_kth_4(arr, k):
     return select_kth_4(arr[pivot+1:], k-pivot-1)
 
 def main():
-  sizes = [10]
-  kth = [1/4, 1/2, 3/4]
+  # Modify only these values to change how the program runs
+  sizes = [10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000, 10000]  # Number of elements
+  kth = [1/4, 1/2, 3/4] # kth will always include 1st element and last element
   runs = 10
 
   for n in sizes:
-    alg1, alg2, alg3, alg4 = 0, 0, 0, 0
+    alg1_time, alg2_time, alg3_time, alg4_time = 0, 0, 0, 0
 
+    # [1, n/4, n/2, 3n/4, n] with default kth list [1/4, 1/2, 3/4]
     indices = [1]
     indices.extend([floor(n*pos) for pos in kth])
     indices.append(n)
@@ -139,7 +140,7 @@ def main():
       for run in range(runs):
         print(f'run: {run+1}')
         print(f'k: {k}')
-        test_list = [floor(random()*10+1) for x in range(10)]
+        test_list = [floor(random()*n) for x in range(n)] # n elements, random numbers from 0 to n-1
 
         list_dupe = test_list.copy()
         start_time = time.time()
@@ -147,29 +148,40 @@ def main():
         list_dupe[k-1]  # Access time included (miniscule, but necessary for fair results)
         end_time = time.time()
         time_elapsed = end_time - start_time
-        alg1 += time_elapsed
+        alg1_time += time_elapsed
 
         list_dupe = test_list.copy()
         start_time = time.time()
         select_kth_2(list_dupe, 0, len(list_dupe)-1, k)
         end_time = time.time()
         time_elapsed = end_time - start_time
-        alg2 += time_elapsed
+        alg2_time += time_elapsed
 
         list_dupe = test_list.copy()
         start_time = time.time()
         select_kth_3(list_dupe, 0, len(list_dupe)-1, k)
         end_time = time.time()
         time_elapsed = end_time - start_time
-        alg3 += time_elapsed
+        alg3_time += time_elapsed
 
         list_dupe = test_list.copy()
         start_time = time.time()
         select_kth_4(list_dupe, k)
         end_time = time.time()
         time_elapsed = end_time - start_time
-        alg4 += time_elapsed
-  print(alg1, alg2, alg3, alg4)
+        alg4_time += time_elapsed
+    with open('algorithm1.csv', 'a', newline='') as csvfile:
+      csvwriter = csv.writer(csvfile)
+      csvwriter.writerow([n, alg1_time/runs])
+    with open('algorithm2.csv', 'a', newline='') as csvfile:
+      csvwriter = csv.writer(csvfile)
+      csvwriter.writerow([n, alg2_time/runs])
+    with open('algorithm3.csv', 'a', newline='') as csvfile:
+      csvwriter = csv.writer(csvfile)
+      csvwriter.writerow([n, alg3_time/runs])
+    with open('algorithm4.csv', 'a', newline='') as csvfile:
+      csvwriter = csv.writer(csvfile)
+      csvwriter.writerow([n, alg4_time/runs])
 
 if __name__ == '__main__':
   main()
