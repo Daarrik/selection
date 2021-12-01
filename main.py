@@ -124,7 +124,7 @@ def select_kth_4(arr, k):
 
 def main():
   # Modify only these values to change how the program runs
-  sizes = [10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000, 10000]  # Number of elements
+  sizes = [10, 50, 100, 250, 500, 1000, 2000, 3000, 4000, 5000, 10000, 25000, 50000, 100000, 250000]  # Number of elements
   kth = [1/4, 1/2, 3/4] # kth will always include 1st element and last element
   runs = 10
 
